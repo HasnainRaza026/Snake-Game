@@ -3,6 +3,7 @@ from snake import Snake
 from food import Food
 import turtle
 
+
 class Game:
     def __init__(self, screen):
         self.screen = screen
@@ -28,8 +29,28 @@ class Game:
         self.screen.onkey(self.snake.go_right, "d")
 
     def update_score(self):
-        self.pen.clear()
-        self.pen.write(f"Score: {self.score}  High Score: {self.high_score}", align="center", font=("Courier", 24, "normal"))
+        try:
+            high_score = self.read_highscore_file()
+        except FileNotFoundError:
+            self.pen.clear()
+            self.pen.write(f"Score: {self.score}  High Score: {self.high_score}",
+                           align="center", font=("Courier", 24, "normal"))
+        else:
+            self.pen.clear()
+            self.pen.write(f"Score: {self.score}  High Score: {high_score}",
+                           align="center", font=("Courier", 24, "normal"))
+
+    def update_highscore_file(self):
+        with open('high_score.txt', 'w', encoding="utf-8") as file:
+            file.write(str(self.high_score))
+
+    def read_highscore_file(self):
+        try:
+            with open('high_score.txt', 'r', encoding="utf-8") as file:
+                high_score = file.read()
+                return int(high_score)
+        except FileNotFoundError:
+            return self.high_score
 
     def update(self):
         self.snake.move()
@@ -49,8 +70,9 @@ class Game:
             self.delay -= 0.001
             self.score += 10
 
-            if self.score > self.high_score:
+            if self.score > self.read_highscore_file():
                 self.high_score = self.score
+                self.update_highscore_file()
 
             self.update_score()
 
