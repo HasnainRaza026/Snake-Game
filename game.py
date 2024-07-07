@@ -41,12 +41,12 @@ class Game:
                            align="center", font=("Courier", 24, "normal"))
 
     def update_highscore_file(self):
-        with open('high_score.txt', 'w', encoding="utf-8") as file:
+        with open('high_score.txt', mode='w', encoding="utf-8") as file:
             file.write(str(self.high_score))
 
     def read_highscore_file(self):
         try:
-            with open('high_score.txt', 'r', encoding="utf-8") as file:
+            with open('high_score.txt', mode='r', encoding="utf-8") as file:
                 high_score = file.read()
                 return int(high_score)
         except FileNotFoundError:
